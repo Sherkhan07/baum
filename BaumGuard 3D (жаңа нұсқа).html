@@ -124,6 +124,17 @@ summary{cursor:pointer;font-weight:650}details p,details li{font-size:14px;color
 .tl b{display:block;margin-top:3px}.tl p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
 .subh{font-size:20px;margin:28px 0 14px;letter-spacing:-.3px}
 .prio{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;margin-bottom:8px;letter-spacing:.3px}.prio.h{background:var(--orange-l);color:#8c400c}.prio.m{background:#eef3ed;color:var(--green-d)}
+.dronebtn{display:inline-flex;align-items:center;gap:8px;background:#efe8f8;color:#4b2a7b;border-color:#d6c6ee}.dronebtn:disabled{opacity:.5;cursor:not-allowed}.dic{width:20px;height:20px;vertical-align:middle;flex:none}
+.alert button{margin:6px 0 0 12px;background:#fff;color:#4b2a7b;border:0;padding:6px 12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:6px;font-size:14px}
+.dpanel{position:fixed;right:16px;bottom:16px;width:min(460px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:16px;box-shadow:0 18px 50px -10px #0b2a2266,0 0 0 1px #12302a22;z-index:80}
+.dhead{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#2a1f3d;color:#fff;position:sticky;top:0;z-index:2}.dhead b{font-size:15px}.dstate{margin-left:auto;font-size:12px;background:#ffffff26;padding:3px 9px;border-radius:12px}.dx{background:transparent;color:#fff;border:0;padding:4px 8px;font-size:16px}
+.dview{position:relative;background:#111;aspect-ratio:16/9}.dview canvas,.dview video{width:100%;height:100%;display:block;object-fit:cover}.dsim{position:absolute;right:8px;bottom:8px;font-size:10.5px;letter-spacing:1px;color:#fff;background:#0009;padding:3px 8px;border-radius:8px;pointer-events:none}
+.dinfo{padding:10px 12px 0;font-size:13px;color:var(--muted);line-height:1.45}.dinfo b{color:var(--ink)}
+.dres{padding:8px 12px 4px}.dres .small{margin:0}.dbtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.dbtns button{font-size:13px;padding:7px 10px}.dbtns button:disabled{opacity:.45;cursor:not-allowed}
+.dres input{width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1px solid #c9d8cf;border-radius:9px}
+.dfoot{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:6px 12px 10px;font-size:12px}.dfoot button{font-size:13px;padding:7px 10px}.dfoot button:disabled{opacity:.45}.dfoot label{margin:0;font-weight:500;font-size:12px;color:var(--muted)}.dfoot input[type=file]{font-size:11px;max-width:200px;margin-top:4px;display:block}.dfoot a{font-size:12px}
+.dnote{margin:0;padding:8px 12px 12px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:560px){.dpanel{right:8px;left:8px;bottom:8px;width:auto}}
 .alert{background:var(--orange);color:#fff;padding:14px 18px;border-radius:14px;margin-bottom:18px;font-weight:650;box-shadow:0 10px 26px -12px #c2570c90}
 .srcs{columns:2;font-size:13.5px;color:var(--muted)}.srcs li{margin-bottom:6px;break-inside:avoid}
 footer{font-size:12px;color:var(--muted);padding:10px 4% 30px;max-width:1440px;margin:auto}
@@ -168,7 +179,6 @@ footer{font-size:12px;color:var(--muted);padding:10px 4% 30px;max-width:1440px;m
 <label><input type="checkbox" data-layer="resp" checked> Іс-қимыл жоспары</label>
 <label><input type="checkbox" data-layer="fs" checked> Өрт сөндіру бөлімдері</label></div>
 <div class="legend"><span><i class="sw" style="background:#177858"></i>Қалыпты</span><span><i class="sw" style="background:#c2570c"></i>Тексеру қажет</span><span><i class="sw" style="background:#a9874e"></i>Қураған ағаш (≈8 %, шартты орын)</span><span><i class="sw" style="background:transparent;border:2px dashed #177858"></i>Анықтау радиусы</span><span><i class="sw sq" style="background:#ff6a13"></i>Жанып жатыр</span><span><i class="sw sq" style="background:#3a2c25"></i>Күйген</span><span><i class="sw sq" style="background:#1d8c66"></i>BaumGuard-пен шектелер еді («жоқ» режимінде)</span><span id="respLeg" class="respleg"><span class="rl-hint">🚒 Өрт сөндірушілердің келу жолы, 🚶 адамдарды шығару, 💧 су көзі және ⚠ өрттің таралу бағыты картада өрт шығатын жер таңдалғанда пайда болады</span><span class="rl-on"><span><i class="ln b"></i>🚒 келу жолы</span><span><i class="ln g dash"></i>🚶 шығу</span><span><i class="ln c dot"></i>💧 су</span><span><i class="ln o dash"></i>⚠ таралу бағыты</span></span></span><span id="count"></span></div>
-<div class="attr">Карта деректері © OpenStreetMap contributors (ODbL). Ағаштар саны мен түрі статистикаға сай модельденген, әр ағаштың нақты орны емес.</div>
 </div>
 
 <aside><div class="card"><h2>Датчикті басқару</h2>
@@ -179,6 +189,7 @@ footer{font-size:12px;color:var(--muted);padding:10px 4% 30px;max-width:1440px;m
 <label for="temp">Температураны модельдеу <output id="tempOut"></output></label><input id="temp" type="range" min="10" max="70" value="24">
 <label for="humidity">Ылғалдылықты модельдеу <output id="humOut"></output></label><input id="humidity" type="range" min="10" max="95" value="42">
 <div class="actions"><button class="danger" id="smoke">Түтінді модельдеу</button><button id="reset">Қалпына келтіру</button><button class="primary" id="ack">Тексерілді</button></div>
+<div class="actions"><button id="droneBtn" class="dronebtn" disabled><img class="dic" alt=""> Дронды тексеруге жіберу</button></div>
 <div class="actions"><button id="sound" aria-pressed="false">🔔 Дыбыс: өшірулі</button><button id="auto">▶ Автосценарий</button></div>
 <p class="small">Ескерту ережесі: түтін белгісі, немесе температура ≥ 45 °C, немесе температура ≥ 35 °C және ылғалдылық ≤ 20 %. Индекс температура, ылғалдылық және жел бойынша есептеледі — оқу мақсатындағы шартты көрсеткіш.</p></div>
 <div class="card"><h3>Ауа райы (барлық тоғайға)</h3>
@@ -189,7 +200,6 @@ footer{font-size:12px;color:var(--muted);padding:10px 4% 30px;max-width:1440px;m
 </section>
 
 <section id="s3d" class="card"><div class="eyebrow">Үш өлшемді модель</div><h2>Баум тоғайы 3D</h2>
-<p class="sub">Нақты шекара мен жолдар бойынша құрылған модель: ~6 500 модельденген ағаш (қураған ағаштар сарғыш-қоңыр), айналадағы қала құрылысы, теміржол және оңтүстікте Іле Алатауы. Сүйреп айналдырыңыз, оң батырмамен (немесе Shift) жылжытыңыз, Ctrl (⌘) + дөңгелекпен жақындатыңыз, датчикті немесе оның белгісін басып таңдаңыз.</p>
 <div class="wrap3d" id="wrap3d"><canvas id="c3d" tabindex="0" role="img" aria-label="Баум тоғайының 3D моделі. Датчиктер күйі жоғарыдағы басқару тақтасында көрсетілген."></canvas>
 <div class="loading3d" id="loading3d">3D модель жүктелуде…</div>
 <div class="hud" id="hud" role="status"></div><div class="hud2" id="hud2"></div><div class="scn" role="group" aria-label="Қай жағдайды көрсету"><button data-scn="sys" aria-pressed="true">✓ BaumGuard бар</button><button data-scn="no" aria-pressed="false">✕ BaumGuard жоқ</button></div>
@@ -310,6 +320,16 @@ footer{font-size:12px;color:var(--muted);padding:10px 4% 30px;max-width:1440px;m
 </section>
 
 </main>
+<div class="dpanel" id="dpanel" role="dialog" aria-label="Дрон камерасы" hidden>
+<div class="dhead"><img class="dic" alt=""><b>Дрон камерасы</b><span class="dstate" id="dState">бекетте</span><button class="dx" id="dClose" aria-label="Терезені жабу">✕</button></div>
+<div class="dview"><canvas id="dFeed" width="640" height="360" role="img" aria-label="Дрон камерасының үлгі бейнесі"></canvas><video id="dVideo" muted loop playsinline hidden></video><span class="dsim">ҮЛГІ БЕЙНЕ · СИМУЛЯЦИЯ</span></div>
+<div class="dinfo" id="dInfo" role="status" aria-live="polite"></div>
+<div class="dres"><p class="small">Тексеру нәтижесін журналға тіркеңіз:</p>
+<div class="dbtns"><button data-res="fire" disabled>🔥 Өрт расталды</button><button data-res="smoke" disabled>💨 Түтін бар, от көрінбейді</button><button data-res="false" disabled>✓ Жалған дабыл</button></div>
+<input id="dNote" type="text" maxlength="160" placeholder="Қосымша ескерту (міндетті емес)" aria-label="Тексеру туралы қосымша ескерту" disabled></div>
+<div class="dfoot"><button id="dReturn" disabled>↩ Бекетке қайтару</button><a id="dIcon" download="baumguard-drone-icon.svg">⬇ Дрон белгісі (макет үшін, SVG)</a></div>
+<p class="dnote">Бұл — анимациялық симуляция. Сайт нақты дронды басқармайды және бейнеден өртті автоматты анықтамайды. Датчиктер бастапқы ескерту береді, ал дрон камерасының үлгі бейнесі жағдайды қосымша бағалауға арналған.</p>
+</div>
 <footer>BaumGuard · Оқушының зерттеу жобасына арналған прототип. Көрсеткіштер модельденген, бұл нақты өртті бақылау қызметі емес. Өрт кезінде: 101 немесе 112. · Карта © OpenStreetMap contributors · 3D: three.js r128 (MIT).</footer>
 
 <script>/**
@@ -327,6 +347,7 @@ const GEO={"park":[[-631,-523],[-622,-528],[-525,-524],[-524,-572],[-455,-574],[
 const SMALL=matchMedia('(max-width:700px)').matches;
 const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let LIGHTS=null,PLAMPS=null,SCN='sys';
+var DR=null;const DRONE_SVG='<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#6b3fa0" stroke="#fff" stroke-width="3"/><g stroke="#fff" stroke-width="4" stroke-linecap="round"><line x1="19" y1="19" x2="45" y2="45"/><line x1="45" y1="19" x2="19" y2="45"/></g><g fill="none" stroke="#fff" stroke-width="3"><circle cx="18" cy="18" r="7.5"/><circle cx="46" cy="18" r="7.5"/><circle cx="18" cy="46" r="7.5"/><circle cx="46" cy="46" r="7.5"/></g><rect x="25" y="25" width="14" height="14" rx="4" fill="#fff"/><circle cx="32" cy="32" r="3" fill="#6b3fa0"/></svg>',DRONE_URL='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(DRONE_SVG),DIMG=new Image();DIMG.src=DRONE_URL;
 
 /* ---------- Датчиктер, ауа райы, параметрлер ---------- */
 const sensors=[['D1','Солтүстік ұшы',481,1099],['D2','Теміржол бойы',319,639],['D3','Орталық бөлік',197,145],['D4','Батыс жиек',-235,-212],['D5','Шығыс аллея',94,-340],['D6','Батыс аллея',-291,-559],['D7','Оңтүстік бөлік',-92,-879],['D8','БАК маңы',-336,-1186]].map(([id,name,x,y])=>({id,name,x,y,temp:24,humidity:42,smoke:false}));
@@ -424,7 +445,7 @@ const M=(()=>{const cv=$('map2d'),box=$('map'),g=cv.getContext('2d'),sc=document
   const fv=fireView();if(fv.touched.length){const z=CS*s+.6,bs=new Set(fv.burning);fv.touched.forEach(k=>{const[x,y]=cxy(k);g.fillStyle=bs.has(k)?'#ff6a13':!fv.a&&SCN==='no'&&F.done&&F.snapT!==null&&F.snap[k]?'#1d8c66':'#3a2c25';g.fillRect(X(x-CS/2),Y(y+CS/2),z,z)});
    g.globalCompositeOperation='lighter';fv.burning.forEach((k,i)=>{const[x,y]=cxy(k),f=.5+.5*Math.sin(T/90+i*1.7),r=(CS*1.6+f*CS)*s+2;g.fillStyle='rgba(255,120,30,'+(.18+.12*f).toFixed(2)+')';g.beginPath();g.arc(X(x),Y(y),r,0,6.283);g.fill()});g.globalCompositeOperation='source-over'}
   if(F.ign){const x=X(F.ign[0]),y=Y(F.ign[1]);g.beginPath();g.arc(x,y,9,0,6.283);g.fillStyle='#fff';g.fill();g.strokeStyle='#c2570c';g.lineWidth=3;g.stroke();g.font='14px system-ui';g.textAlign='center';g.textBaseline='middle';g.fillText('🔥',x,y-18)}
-  drawStations(g,X,Y,V.W,V.H);if(L.resp&&RP)drawPlan2D(g,X,Y);
+  drawStations(g,X,Y,V.W,V.H);if(L.resp&&RP)drawPlan2D(g,X,Y);drawDrone2D(g,X,Y,T,V.s);
   const cap=scnCaption();if(cap){g.font='600 12.5px system-ui,Arial';const tw=Math.min(V.W-24,g.measureText(cap[0]).width+24),cy=SMALL?14:56;g.beginPath();g.roundRect?g.roundRect(V.W/2-tw/2,cy,tw,28,14):g.rect(V.W/2-tw/2,cy,tw,28);g.fillStyle=cap[1];g.fill();g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(cap[0],V.W/2,cy+14,tw-16)}
   // түтін, пульс
   sensors.forEach((d,i)=>{const x=X(d.x),y=Y(d.y);if(d.smoke){const to=windTo();for(let k=0;k<5;k++){const f=((T/2400)+k/5)%1;g.beginPath();g.arc(x+to[0]*f*60+Math.sin(k*2.3+f*4)*6,y-to[1]*f*60-18-f*30,5+f*16,0,6.283);g.fillStyle='rgba(90,90,90,'+(.45*(1-f)).toFixed(2)+')';g.fill()}}
@@ -438,7 +459,7 @@ const M=(()=>{const cv=$('map2d'),box=$('map'),g=cv.getContext('2d'),sc=document
   const to=windTo(),wx=V.W-90,wy=V.H-36;g.fillStyle='rgba(18,48,42,.85)';g.beginPath();g.roundRect?g.roundRect(wx-40,wy-22,120,44,12):g.rect(wx-40,wy-22,120,44);g.fill();
   g.save();g.translate(wx-14,wy);g.rotate(Math.atan2(-to[1],to[0]));g.beginPath();g.moveTo(-12,0);g.lineTo(10,0);g.moveTo(4,-6);g.lineTo(11,0);g.lineTo(4,6);g.strokeStyle='#9fe3bf';g.lineWidth=3;g.stroke();g.restore();
   g.fillStyle='#fff';g.textAlign='left';g.font='700 13px system-ui,Arial';g.fillText(W.speed+' м/с',wx+4,wy-6);g.font='11px system-ui,Arial';g.fillStyle='#cfe3d8';g.fillText(W.dir+' желі',wx+4,wy+9)}
- function frame(T){raf=requestAnimationFrame(frame);if(dirty){drawBase(sg,V,{trees:L.trees,dry:L.dry,labels:L.labels,fast,dpr});dirty=false;placePins()}g.setTransform(1,0,0,1,0,0);g.drawImage(sc,0,0);overlay(T||0)}
+ function frame(T){raf=requestAnimationFrame(frame);if(dirty){drawBase(sg,V,{trees:L.trees,dry:L.dry,labels:L.labels,fast,dpr});dirty=false;placePins()}if(!sc.width||!sc.height)return;g.setTransform(1,0,0,1,0,0);g.drawImage(sc,0,0);overlay(T||0)}
  const start=()=>{if(!raf&&vis&&!document.hidden)raf=requestAnimationFrame(frame)},stop=()=>{cancelAnimationFrame(raf);raf=0};
  // басқару
  const ptr=new Map();let moved=0,pinch=0;
@@ -645,7 +666,8 @@ function render(){save();const s=sensors[selected];$('sensor').value=selected;$(
  $('smoke').textContent=s.smoke?'Түтінді өшіру':'Түтінді модельдеу';
  sensors.forEach((d,i)=>{const p=M.pins[i];p.className='pin'+(risky(d)?' warn':'');p.setAttribute('aria-pressed',String(i===selected));p.setAttribute('aria-label',d.id+' '+d.name+': '+(risky(d)?reason(d):'қалыпты'))});
  const rk=sensors.filter(risky);$('count').textContent='Ескерту: '+rk.length+' / '+sensors.length;$('alert').hidden=!rk.length;if(rk.length>lastRisk&&soundOn)beep();lastRisk=rk.length;
- $('alert').textContent='⚠ Назар аударыңыз: '+rk.map(d=>d.id+' ('+d.name+')').join(', ')+' — қауіп белгісі бар';
+ {const al=$('alert');al.replaceChildren('⚠ Назар аударыңыз: '+rk.map(d=>d.id+' ('+d.name+')').join(', ')+' — қауіп белгісі бар. Тексеру қажет.');if(rk.length){const tg=risky(s)?s:rk[0],b=document.createElement('button'),im=document.createElement('img');im.className='dic';im.alt='';im.src=DRONE_URL;b.append(im,' Дронды '+tg.id+' нүктесіне жіберу');b.onclick=()=>droneLaunch(sensors.indexOf(tg));al.append(b)}}
+ $('droneBtn').disabled=!risky(s);$('droneBtn').lastChild.textContent=' Дронды тексеруге жіберу ('+s.id+')';
  $('wind').value=W.speed;$('windDir').value=W.dir;$('windOut').textContent=W.speed+' м/с';$('detR').value=P.detR;$('detROut').textContent=P.detR+' м';$('humanOut').textContent=P.human+' мин';$('arrive').disabled=$('autoArr').checked;$('arriveOut').textContent=$('autoArr').checked?(F.ign&&F.route?F.arrive+' мин · маршрут бойынша':'маршрут бойынша'):P.arrive+' мин';
  S3.update();preNow()}
 $('sensor').onchange=e=>select(Number(e.target.value));
@@ -681,7 +703,7 @@ $('auto').onclick=()=>{if(auto){clearInterval(auto);auto=null;setAutoBtn(false);
 $('fAuto').onclick=()=>$('auto').click();
 
 /* ---------- 3D ---------- */
-const S3=(()=>{const cv=$('c3d'),wrap=$('wrap3d'),hud=$('hud'),hud2=$('hud2'),noop={update(){},focus(){},setPlan(){}};
+const S3=(()=>{const cv=$('c3d'),wrap=$('wrap3d'),hud=$('hud'),hud2=$('hud2'),noop={update(){},focus(){},setPlan(){},wake(){},feed:false};
  let R;try{if(!window.THREE)throw 0;R=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'})}catch(e){cv.hidden=true;$('loading3d').hidden=true;$('fallback3d').hidden=false;return noop}
  R.setPixelRatio(Math.min(devicePixelRatio||1,SMALL?1.5:1.75));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.92;
  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(50,1,5,70000),V3=(x,h,y)=>new THREE.Vector3(x,h,-y);
@@ -789,11 +811,31 @@ const S3=(()=>{const cv=$('c3d'),wrap=$('wrap3d'),hud=$('hud'),hud2=$('hud2'),no
   if(r.rt&&r.rt[0])planG.add(pline(r.rt[0].pts.concat([[r.ent.road.x,r.ent.road.y]]),'#1968c2'))}
  const stG=new THREE.Group();scene.add(stG);FSTN.forEach(f=>{const sp=pill('№'+f.id,'#b3261e');sp.position.copy(V3(f.x,30,f.y));stG.add(sp)});
  const TK=[pill('🚒','#1968c2'),pill('🚒','#c2570c')];TK.forEach(t=>{t.visible=false;t.renderOrder=12;scene.add(t)});
+ // виртуалды дрон
+ const dG=new THREE.Group(),dmat=c=>new THREE.MeshStandardMaterial({color:new THREE.Color(c).convertSRGBToLinear(),roughness:.5,metalness:.3});
+ dG.add(new THREE.Mesh(new THREE.BoxGeometry(5,1.6,5),dmat('#2b2b33')));[45,-45].forEach(a=>{const arm=new THREE.Mesh(new THREE.BoxGeometry(17,.6,.9),dmat('#3a3a44'));arm.rotation.y=a*Math.PI/180;dG.add(arm)});
+ const rotors=[];[[6,6],[6,-6],[-6,6],[-6,-6]].forEach(([x,z])=>{const r=new THREE.Mesh(new THREE.CylinderGeometry(3.2,3.2,.25,20),new THREE.MeshBasicMaterial({color:0xdddddd,transparent:true,opacity:.5,depthWrite:false}));r.position.set(x,1,z);dG.add(r);rotors.push(r)});
+ const led=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xb48cff}));led.position.y=-1.2;dG.add(led);dG.scale.setScalar(1.8);dG.traverse(o=>{if(o.isMesh&&o!==led)o.castShadow=true});scene.add(dG);
+ const dTex=new THREE.TextureLoader().load(DRONE_URL);dTex.encoding=THREE.sRGBEncoding;
+ const dSp=new THREE.Sprite(new THREE.SpriteMaterial({map:dTex,depthTest:false,sizeAttenuation:false,transparent:true}));dSp.center.set(.5,0);dSp.scale.set(.042,.042,1);dSp.renderOrder=13;scene.add(dSp);
+ const padM=new THREE.Mesh(new THREE.CircleGeometry(12,32).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:new THREE.Color('#6b3fa0').convertSRGBToLinear(),transparent:true,opacity:.65,depthWrite:false}));padM.renderOrder=3;scene.add(padM);
+ const dcam=new THREE.PerspectiveCamera(62,16/9,2,40000),drt=new THREE.WebGLRenderTarget(640,360);drt.texture.encoding=THREE.sRGBEncoding;
+ const fbuf=new Uint8Array(640*360*4),fimg=new ImageData(640,360);let lastFeed=0;
+ function updDrone(dt){if(!DR)return;padM.position.copy(V3(DR.base[0],1.5,DR.base[1]));const p=DR.pos,al=Math.max(3,DR.alt);dG.position.copy(V3(p[0],al,p[1]));dG.rotation.y=Math.atan2(DR.hv[0],DR.hv[1]);
+  const on=DR.state!=='idle';rotors.forEach(r=>r.rotation.y+=dt*(on?45:0));led.visible=on;dSp.position.copy(V3(p[0],al+9,p[1]))}
+ const feedWanted=()=>DR&&DR.state!=='idle'&&!$('dpanel').hidden&&!DR.video;
+ function renderFeed(t){const p=DR.pos,al=Math.max(8,DR.alt);dcam.position.copy(V3(p[0],al,p[1]));
+  if(DR.state==='orbit'&&DR.tgt)dcam.lookAt(V3(DR.tgt[0],0,DR.tgt[1]));else dcam.lookAt(V3(p[0]+DR.hv[0]*140,0,p[1]+DR.hv[1]*140));
+  const hide=[dG,dSp,padM,planG,stG,...TK,...SN.map(n=>n.label)],vs=hide.map(o=>o.visible);hide.forEach(o=>o.visible=false);sky.position.copy(dcam.position);
+  const au=R.shadowMap.autoUpdate;R.shadowMap.autoUpdate=false;R.setRenderTarget(drt);R.render(scene,dcam);R.readRenderTargetPixels(drt,0,0,640,360,fbuf);R.setRenderTarget(null);R.shadowMap.autoUpdate=au;
+  hide.forEach((o,i)=>o.visible=vs[i]);sky.position.copy(cam.position);
+  for(let y=0;y<360;y++)fimg.data.set(fbuf.subarray((359-y)*2560,(360-y)*2560),y*2560);
+  const g=$('dFeed').getContext('2d');g.putImageData(fimg,0,0);droneHud(g,t)}
  function update(){if(!ready)return;planG.visible=L.resp;stG.visible=L.fs;SN.forEach((n,i)=>{const s=sensors[i],rk=risky(s),c=rk?0xd0601a:0x177858;n.head.material.color.setHex(c).convertSRGBToLinear();n.head.material.emissive.setHex(c).convertSRGBToLinear();n.ring.material.color.setHex(c).convertSRGBToLinear();n.disc.material.color.setHex(c).convertSRGBToLinear();n.ring.scale.set(P.detR,1,P.detR);n.disc.scale.set(P.detR,1,P.detR);n.ring.visible=n.disc.visible=L.cover;
   if(n.rk!==rk){n.rk=rk;n.tex.image=lbl(s,rk);n.tex.needsUpdate=true}n.head.scale.setScalar(i===selected?1.45:1)});
   const s=sensors[selected],a=document.createElement('strong'),b=document.createElement('span');a.textContent=s.id+' · '+s.name;b.textContent=s.temp+'°C · '+s.humidity+'% · түтін: '+(s.smoke?'бар':'жоқ')+' · индекс '+fri(s);hud.replaceChildren(a,b);hud.className='hud'+(risky(s)?' warn':'');
   hud2.textContent='Жел: '+W.speed+' м/с, '+W.dir+(F.ign?' · '+F.t+'-мин':'')}
- function frame(t){raf=requestAnimationFrame(frame);const dt=Math.min(.05,(t-last)/1000||.016);last=t;if(orbit&&!drag)C.gth+=dt*.07;const k=Math.min(1,dt*5.5);
+ function frame(t){if(!vis&&!(DR&&DR.state!=='idle')){raf=0;return}raf=requestAnimationFrame(frame);const dt=Math.min(.05,(t-last)/1000||.016);last=t;if(orbit&&!drag)C.gth+=dt*.07;const k=Math.min(1,dt*5.5);
   C.th+=(C.gth-C.th)*k;C.ph+=(C.gph-C.ph)*k;C.d+=(C.gd-C.d)*k;C.tx+=(C.gx-C.tx)*k;C.tz+=(C.gz-C.tz)*k;place();
   SN.forEach((n,i)=>{const s=sensors[i];if(risky(s)&&!REDUCE){const f=(t/1400)%1;n.pulse.scale.set(20+f*130,1,20+f*130);n.pulse.material.opacity=.8*(1-f);n.head.material.emissiveIntensity=.6+.5*Math.sin(t/180)}else{n.pulse.material.opacity=0;n.head.material.emissiveIntensity=night?1.1:.45}
    if(s.smoke&&Math.random()<dt*7)emit(s.x,48,s.y,false,false)});
@@ -803,8 +845,8 @@ const S3=(()=>{const cv=$('c3d'),wrap=$('wrap3d'),hud=$('hud'),hud2=$('hud2'),no
   flames.instanceMatrix.needsUpdate=true;if(flames.instanceColor)flames.instanceColor.needsUpdate=true;
   if(nb){fireL.position.copy(V3(cx/flames.count,80,cy/flames.count));fireL.intensity=Math.min(night?6:3,.6+nb*.03)*(.8+.2*Math.sin(t/70));for(let q=0;q<Math.min(3,1+nb/60);q++)if(Math.random()<dt*14){const kk=FB[Math.floor(Math.random()*nb)],[x,y]=cxy(kk);emit(x,20,y,true,true)}}else fireL.intensity=0;
   PS.forEach(p=>{if(!p.s.visible)return;p.life+=dt;if(p.life>p.max){p.s.visible=false;return}const f=p.life/p.max;p.s.position.x+=p.v[0]*dt;p.s.position.y+=p.v[1]*dt;p.s.position.z+=p.v[2]*dt;const sc=p.s0*(1+f*3.2);p.s.scale.set(sc,sc,1);p.s.material.opacity=.55*Math.sin(Math.PI*f)});
-  R.render(scene,cam)}
- const start=()=>{if(!raf&&vis&&!document.hidden){last=performance.now();raf=requestAnimationFrame(frame)}},stop=()=>{cancelAnimationFrame(raf);raf=0};
+  updDrone(dt);if(vis)R.render(scene,cam);if(feedWanted()&&t-lastFeed>70){lastFeed=t;renderFeed(t)}}
+ const start=()=>{if(!raf&&(vis||(DR&&DR.state!=='idle'))&&!document.hidden){last=performance.now();raf=requestAnimationFrame(frame)}},stop=()=>{cancelAnimationFrame(raf);raf=0};
  // басқару
  let drag=false,mode=0,lx=0,ly=0,moved=0,pinch=0;const ptr=new Map(),ray=new THREE.Raycaster(),nv=new THREE.Vector2();
  const pan=(dx,dy)=>{const f=C.d*.0012,s=Math.sin(C.th),c=Math.cos(C.th);C.gx+=(-dx*c-dy*s)*f;C.gz+=(dx*s-dy*c)*f;C.gx=clamp(C.gx,VB[0],VB[2]);C.gz=clamp(C.gz,-VB[3],-VB[1])};
@@ -830,11 +872,67 @@ const S3=(()=>{const cv=$('c3d'),wrap=$('wrap3d'),hud=$('hud'),hud2=$('hud2'),no
  $('fsBtn').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else if(wrap.requestFullscreen)wrap.requestFullscreen()};
  document.addEventListener('fullscreenchange',()=>setTimeout(size,50));
  if('ResizeObserver' in window)new ResizeObserver(size).observe(cv);else addEventListener('resize',size);
- if('IntersectionObserver' in window)new IntersectionObserver(en=>{vis=en[0].isIntersecting;vis?start():stop()}).observe(cv);
+ if('IntersectionObserver' in window)new IntersectionObserver(en=>{vis=en[0].isIntersecting;if(vis)start();else if(!(DR&&DR.state!=='idle'))stop()}).observe(cv);
  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
  setNight(false);size();ready=true;$('loading3d').hidden=true;start();
- return{update,setPlan,focus(i){const s=sensors[i];C.gx=s.x;C.gz=-s.y;C.gd=Math.min(C.gd,2600)}};
+ return{update,setPlan,wake:start,feed:true,focus(i){const s=sensors[i];C.gx=s.x;C.gz=-s.y;C.gd=Math.min(C.gd,2600)}};
 })();
+
+/* ---------- Виртуалды бақылау дроны ---------- */
+DR=(()=>{const e=entrances().slice().sort((a,b)=>Math.hypot(a.x,a.y)-Math.hypot(b.x,b.y))[0];return{base:[e.x,e.y],pos:[e.x,e.y],alt:0,hv:[0,1],state:'idle',tgt:null,si:-1,speed:12,TS:5,H:60,R:70,ang:0,simT:0,trail:[],video:false,raf:0,last:0,logged:false,lastInfo:0}})();
+const DST={idle:'бекетте',up:'көтерілуде',fly:'нүктеге ұшып барады',orbit:'нүкте үстінде — шолу',back:'бекетке қайтуда',down:'қонуда'};
+const DRES={fire:'Өрт расталды',smoke:'Түтін бар, ашық от көрінбейді',false:'Жалған дабыл'};
+const mmss=v=>{v=Math.floor(v);return String(Math.floor(v/60)).padStart(2,'0')+':'+String(v%60).padStart(2,'0')};
+document.querySelectorAll('.dic').forEach(i=>i.src=DRONE_URL);$('dIcon').href=DRONE_URL;
+function droneTarget(i){const s=sensors[i];if(F.ign&&F.detBy===i){const B=fireView().burning;if(B.length){let x=0,y=0;B.forEach(k=>{const c=cxy(k);x+=c[0];y+=c[1]});return[x/B.length,y/B.length]}return F.ign.slice()}return[s.x,s.y]}
+function droneLaunch(i){if(i<0)return;const s=sensors[i];if(DR.state==='idle'){DR.simT=0;DR.trail=[]}DR.si=i;DR.tgt=droneTarget(i);DR.logged=false;DR.state=DR.alt<DR.H?'up':'fly';
+ const d=Math.hypot(DR.tgt[0]-DR.pos[0],DR.tgt[1]-DR.pos[1]);addEvent('Дрон','Дрон '+s.id+' нүктесіне тексеруге жіберілді: '+Math.round(d)+' м, ұшу ≈ '+Math.round(Math.max(0,d-DR.R)/DR.speed+(DR.H-DR.alt)/6)+' с');
+ $('dpanel').hidden=false;droneUI();S3.wake();if(!DR.raf){DR.last=performance.now();DR.raf=requestAnimationFrame(droneTick)}}
+function droneTick(t){const dt=Math.min(.1,(t-DR.last)/1000);DR.last=t;const sd=dt*(REDUCE?2:DR.TS),p=DR.pos;DR.simT+=sd;
+ const moveTo=(q,stop)=>{const dx=q[0]-p[0],dy=q[1]-p[1],d=Math.hypot(dx,dy);if(d<.01)return true;DR.hv=[dx/d,dy/d];const st=DR.speed*sd,left=d-stop;if(left<=st){if(left>0){p[0]+=dx/d*left;p[1]+=dy/d*left}return true}p[0]+=dx/d*st;p[1]+=dy/d*st;return false};
+ if(DR.state==='up'){DR.alt=Math.min(DR.H,DR.alt+6*sd);if(DR.alt>=DR.H)DR.state='fly';if(DR.tgt){const dx=DR.tgt[0]-p[0],dy=DR.tgt[1]-p[1],d=Math.hypot(dx,dy)||1;DR.hv=[dx/d,dy/d]}}
+ else if(DR.state==='fly'){if(moveTo(DR.tgt,DR.R)){DR.state='orbit';DR.ang=Math.atan2(p[1]-DR.tgt[1],p[0]-DR.tgt[0]);addEvent('Дрон','Дрон '+sensors[DR.si].id+' нүктесіне жетті — камерамен шолу басталды');droneUI()}}
+ else if(DR.state==='orbit'){DR.ang+=DR.speed*.5/DR.R*sd;p[0]=DR.tgt[0]+DR.R*Math.cos(DR.ang);p[1]=DR.tgt[1]+DR.R*Math.sin(DR.ang);DR.hv=[-Math.sin(DR.ang),Math.cos(DR.ang)]}
+ else if(DR.state==='back'){if(moveTo(DR.base,0))DR.state='down'}
+ else if(DR.state==='down'){DR.alt=Math.max(0,DR.alt-6*sd);if(DR.alt<=0){DR.state='idle';DR.trail=[];addEvent('Дрон','Дрон бекетке қонды');droneUI()}}
+ const L0=DR.trail[DR.trail.length-1];if(DR.state!=='idle'&&(!L0||Math.hypot(p[0]-L0[0],p[1]-L0[1])>10)){DR.trail.push([p[0],p[1]]);if(DR.trail.length>500)DR.trail.shift()}
+ droneInfo(t);if(DR.state==='idle'){DR.raf=0;return}DR.raf=requestAnimationFrame(droneTick)}
+function droneUI(){$('dState').textContent=DST[DR.state];const can=DR.state==='orbit'&&!DR.logged;document.querySelectorAll('[data-res]').forEach(b=>b.disabled=!can);$('dNote').disabled=!can;$('dReturn').disabled=!['up','fly','orbit'].includes(DR.state);droneInfo(performance.now(),true)}
+function droneInfo(t,force){if(!force&&t-DR.lastInfo<200)return;DR.lastInfo=t;const el=$('dInfo'),s=sensors[DR.si],B=x=>'<b>'+x+'</b>';
+ if(DR.state==='idle'||!s){el.innerHTML=s&&DR.logged?'✓ Тексеру аяқталды, нәтиже журналға тіркелді. Дрон бекетте.':'Дрон бекетте. Қауіп белгісі бар датчикті таңдап, «Дронды тексеруге жіберу» батырмасын басыңыз.'}
+ else{const home=DR.state==='back'||DR.state==='down',tg=home?DR.base:DR.tgt,d=Math.max(0,Math.hypot(tg[0]-DR.pos[0],tg[1]-DR.pos[1])-(home?0:DR.R));
+  let h='Нысана: '+B(s.id+' · '+s.name)+' · '+(DR.state==='orbit'?'нүкте үстінде':(home?'бекетке дейін ':'қалған қашықтық ')+B(Math.round(d)+' м'))+' · биіктік '+B(Math.round(DR.alt)+' м')+' · уақыт '+B(mmss(DR.simT))+' <span class="small">(анимация '+(REDUCE?2:DR.TS)+'× жылдам)</span>';
+  if(DR.state==='orbit')h+='<br>'+(DR.logged?'✓ Нәтиже журналға тіркелді, дрон бекетке қайтады.':'Камерамен шолу жүріп жатыр. Жағдайды бағалап, нәтижені төменде тіркеңіз.');
+  el.innerHTML=h}
+ if(!S3.feed&&!DR.video&&!$('dpanel').hidden&&DR.state!=='idle'){const g=$('dFeed').getContext('2d');g.fillStyle='#1b2430';g.fillRect(0,0,640,360);g.fillStyle='#cfd8e3';g.font='600 18px system-ui,Arial';g.textAlign='center';g.fillText('3D камера симуляциясы бұл браузерде қолжетімсіз',320,170);droneHud(g,t)}}
+function droneHud(g,t){const W=640,H=360;g.save();g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=2;
+ [[20,20,1,1],[W-20,20,-1,1],[20,H-20,1,-1],[W-20,H-20,-1,-1]].forEach(([x,y,a,b])=>{g.beginPath();g.moveTo(x,y+b*26);g.lineTo(x,y);g.lineTo(x+a*26,y);g.stroke()});
+ g.beginPath();g.moveTo(W/2-20,H/2);g.lineTo(W/2-7,H/2);g.moveTo(W/2+7,H/2);g.lineTo(W/2+20,H/2);g.moveTo(W/2,H/2-20);g.lineTo(W/2,H/2-7);g.moveTo(W/2,H/2+7);g.lineTo(W/2,H/2+20);g.stroke();
+ g.font='600 14px system-ui,Arial';g.textBaseline='middle';g.textAlign='left';const l1='REC  ДРОН-1  '+mmss(DR.simT),sp=DR.state==='orbit'?Math.round(DR.speed*.5):['fly','back'].includes(DR.state)?DR.speed:0,r1='БИІКТІК '+Math.round(DR.alt)+' м · '+sp+' м/с';
+ g.fillStyle='rgba(0,0,0,.5)';g.fillRect(30,28,g.measureText(l1).width+34,24);g.fillRect(W-40-g.measureText(r1).width,28,g.measureText(r1).width+20,24);
+ if(Math.floor(t/600)%2===0){g.fillStyle='#ff3b30';g.beginPath();g.arc(44,40,6,0,7);g.fill()}g.fillStyle='#fff';g.fillText(l1,56,40);g.textAlign='right';g.fillText(r1,W-30,40);
+ const s=sensors[DR.si];if(s){g.textAlign='left';const tx='НЫСАНА: '+s.id+' · '+DST[DR.state].toUpperCase();g.fillStyle='rgba(0,0,0,.5)';g.fillRect(30,H-52,g.measureText(tx).width+20,24);g.fillStyle='#fff';g.fillText(tx,40,H-40)}
+ g.restore()}
+function drawDrone2D(g,X,Y,T,sc){if(!DR)return;const bp=[X(DR.base[0]),Y(DR.base[1])],idle=DR.state==='idle';g.save();
+ if(DIMG.complete){g.globalAlpha=idle?1:.75;const z=idle?24:18;g.drawImage(DIMG,bp[0]-z/2,bp[1]-z/2,z,z);g.globalAlpha=1}
+ g.font='600 11px system-ui,Arial';g.textAlign='center';g.textBaseline='top';g.lineWidth=3;g.strokeStyle='rgba(255,255,255,.92)';g.strokeText('Дрон бекеті',bp[0],bp[1]+14);g.fillStyle='#4b2a7b';g.fillText('Дрон бекеті',bp[0],bp[1]+14);
+ if(!idle){const dp=[X(DR.pos[0]),Y(DR.pos[1])];
+  if(DR.trail.length>1){g.beginPath();DR.trail.forEach((q,i)=>i?g.lineTo(X(q[0]),Y(q[1])):g.moveTo(X(q[0]),Y(q[1])));g.lineTo(dp[0],dp[1]);g.strokeStyle='rgba(107,63,160,.45)';g.lineWidth=2.5;g.stroke()}
+  if(DR.tgt&&DR.state!=='back'&&DR.state!=='down'){const tp=[X(DR.tgt[0]),Y(DR.tgt[1])];if(DR.state!=='orbit'){g.setLineDash([6,6]);g.strokeStyle='#6b3fa0';g.lineWidth=2;g.beginPath();g.moveTo(dp[0],dp[1]);g.lineTo(tp[0],tp[1]);g.stroke();g.setLineDash([])}
+   const f=REDUCE?.5:(T/1200)%1;g.beginPath();g.arc(tp[0],tp[1],Math.max(14,DR.R*sc)*(.6+.4*f),0,7);g.strokeStyle='rgba(107,63,160,'+(1-f).toFixed(2)+')';g.lineWidth=3;g.stroke()}
+  const off=DR.alt/DR.H*9;g.fillStyle='rgba(0,0,0,.22)';g.beginPath();g.ellipse(dp[0]+off,dp[1]+off,12,8,0,0,7);g.fill();if(DIMG.complete)g.drawImage(DIMG,dp[0]-16,dp[1]-16,32,32);
+  const lab='Дрон · '+DST[DR.state];g.font='700 11.5px system-ui,Arial';g.textBaseline='bottom';g.lineWidth=3.5;g.strokeStyle='#fff';g.strokeText(lab,dp[0],dp[1]-18);g.fillStyle='#4b2a7b';g.fillText(lab,dp[0],dp[1]-18)}
+ g.restore()}
+document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{if(DR.state!=='orbit'||DR.logged)return;const s=sensors[DR.si],note=$('dNote').value.trim(),r=b.dataset.res;
+ addEvent(s.id,'Дрон тексеруі: '+DRES[r]+(note?' — '+note:''));
+ if(r==='fire'){addEvent('Дрон','Өрт расталды: 101 / 112-ге хабарлау ұсынылады');if(soundOn)beep()}
+ if(r==='false'&&!(F.ign&&F.detBy===DR.si)&&s.smoke){s.smoke=false;addEvent(s.id,'Ескерту жалған деп белгіленді, түтін белгісі өшірілді');render()}
+ DR.logged=true;$('dNote').value='';droneUI();setTimeout(()=>{if(DR.state==='orbit'){DR.state='back';addEvent('Дрон','Дрон бекетке қайтуда');droneUI()}},1500)});
+$('dReturn').onclick=()=>{if(['up','fly','orbit'].includes(DR.state)){DR.state='back';addEvent('Дрон','Дрон бекетке қайтарылды');droneUI()}};
+$('dClose').onclick=()=>{$('dpanel').hidden=true};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('dpanel').hidden&&!M.pick)$('dpanel').hidden=true});
+$('droneBtn').onclick=()=>droneLaunch(selected);
+droneUI();
 
 function clock(){$('clock').textContent=new Date().toLocaleTimeString('kk-KZ')}clock();setInterval(clock,1000);
 renderLogs();render();planCompute();drawChart();renderPlan();addEvent('Жүйе','BaumGuard іске қосылды: '+sensors.length+' датчик, тоғай ауданы (OSM) ≈ '+PARK_HA.toFixed(0)+' га');
