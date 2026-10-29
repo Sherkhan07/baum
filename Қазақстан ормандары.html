@@ -60,7 +60,7 @@ h2{font-size:22px;margin:0 0 6px;letter-spacing:-.4px}h3{margin:0 0 10px;font-si
 .apin.adapt{background:var(--blue)}.apin.next{background:var(--grey)}
 .apin[aria-pressed=true]{outline:3px solid var(--ink);outline-offset:2px}
 .apin .alertdot{width:9px;height:9px;border-radius:50%;background:#ffb072;box-shadow:0 0 0 2px #c2570c}
-.plbl.st{background:rgba(18,48,42,.8);color:#fff;font-weight:600;font-size:10.5px;border-radius:6px;padding:1px 6px}.plbl.pl{background:#fff;color:#0f4d3a;font-weight:800;font-size:12px;box-shadow:0 2px 8px #12302a40}.plbl.pk{background:#5b3d22;color:#fff;font-weight:700}
+.plbl.truck{background:#d6281e;color:#fff;font-weight:800;box-shadow:0 2px 10px #d6281e80}.plbl.st{background:rgba(18,48,42,.8);color:#fff;font-weight:600;font-size:10.5px;border-radius:6px;padding:1px 6px}.plbl.pl{background:#fff;color:#0f4d3a;font-weight:800;font-size:12px;box-shadow:0 2px 8px #12302a40}.plbl.pk{background:#5b3d22;color:#fff;font-weight:700}
 .vtools button[aria-pressed=true]{background:#163b32;color:#fff}
 .plbl{position:absolute;left:0;top:0;font:600 11px system-ui,sans-serif;color:#22352c;background:rgba(255,255,255,.82);padding:2px 7px;border-radius:8px;white-space:nowrap;will-change:transform}
 .s3{position:absolute;left:0;top:0;pointer-events:auto;border:2px solid #fff;border-radius:20px;padding:3px 9px;font-size:12.5px;font-weight:800;color:#fff;background:#177858;box-shadow:0 3px 10px #0b2a2260;will-change:transform;line-height:1.3}
@@ -1128,8 +1128,8 @@ function fireStart(){const id=cur,A=SC[id],sp=SPEC[id];if(!A||!sp._terr)return;f
  const c=G3.ctl;G3.mode="free";document.querySelectorAll(".vmodes button").forEach(b=>b.setAttribute("aria-pressed","false"));c.goal={target:V(p.x-300,A.H(p.x,p.y),p.y-190),r:SMALL?380:300,ph:.62};
  updateFirePanel(true)}
 function fireStop(){if(!FIRE)return;const A=SC[FIRE.id];if(A){A.scene.remove(FIRE.ov);FIRE.flames.forEach(f=>A.scene.remove(f.s));FIRE.smokes.forEach(f=>A.scene.remove(f.s));
-  FIRE.trees.forEach(o=>{o.m.instanceColor.array.set(o.orig);o.m.instanceColor.needsUpdate=true});if(FIRE.truck){FIRE.truck.parts.forEach(o=>A.scene.remove(o))}}
- FIRE.tex.dispose();FIRE=null;document.getElementById("fPanel").hidden=true;document.getElementById("sHud").hidden=false;document.getElementById("bFire").textContent="🔥 Өрттің таралуын көрсету (жел бойынша)"}
+  FIRE.trees.forEach(o=>{o.m.instanceColor.array.set(o.orig);o.m.instanceColor.needsUpdate=true});if(FIRE.truck){FIRE.truck.parts.forEach(o=>A.scene.remove(o));const lo=FIRE.truck.lbo;if(lo){lo.b.remove();const k=A.lb.indexOf(lo);if(k>=0)A.lb.splice(k,1)}}}
+ FIRE.tex.dispose();FIRE=null;document.getElementById("fMiles").hidden=false;document.getElementById("fPanel").hidden=true;document.getElementById("sHud").hidden=false;document.getElementById("bFire").textContent="🔥 Өрттің таралуын көрсету (жел бойынша)"}
 const BURN=12;
 function fireTick(dt,ts){const F=FIRE;if(!F||F.id!==cur)return;const A=SC[F.id];if(F.play)F.t=Math.min(300,F.t+dt*F.speed);
  if(Math.abs(F.t-F.last)>=.12||!F.play&&F.last<0){F.last=F.t;const d=F.img.data,t=F.t;
@@ -1167,21 +1167,38 @@ function makeTruck(){const g=new THREE.Group(),red=new THREE.MeshLambertMaterial
  const l1=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({color:0x2a6bff})),l2=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({color:0xff2a2a}));
  l1.position.set(-.6,2.85,2.7);l2.position.set(.6,2.85,2.7);g.add(l1,l2);g.userData.lights=[l1,l2];g.traverse(o=>{if(o.isMesh)o.castShadow=true});return g}
 function callTruck(){const F=FIRE;if(!F||F.truck)return;const R=FIRE_ROUTES[F.id];if(!R)return;const A=SC[F.id],O=OSM_DATA[F.id],parts=[];
- let pts=null,cum=[0];if(O){pts=R.geom.map(([la,lo])=>areaXY(F.id,la,lo));for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]))}
- let truck=null;if(pts){const wd=Math.max(1.6,5/F.k),v=[],ix=[];
-  for(let i=0;i<pts.length-1;i++){const [x0,y0]=pts[i],[x1,y1]=pts[i+1];if(!inScene(x0,y0)&&!inScene(x1,y1))continue;const L=Math.hypot(x1-x0,y1-y0)||1,steps=Math.max(1,Math.ceil(L/4));
+ let pts=null,cum=[0],truck=null,lbo=null;
+ if(O){const all=R.geom.map(([la,lo])=>areaXY(F.id,la,lo)),i0=Math.max(0,all.findIndex(([x,y])=>inScene(x,y)));pts=all.slice(i0);
+  // бекеттен соң өрт орнына дейін (шеттен 8 бірлік қалдырып)
+  const fp=AREAS[F.id].points.find(q=>q.id===F.start),e=pts[pts.length-1],dd=Math.hypot(fp.x-e[0],fp.y-e[1]);if(dd>10)pts.push([fp.x-(fp.x-e[0])/dd*8,fp.y-(fp.y-e[1])/dd*8]);
+  for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+  const wd=Math.max(2.5,7/F.k),v=[],ix=[];
+  for(let i=0;i<pts.length-1;i++){const [x0,y0]=pts[i],[x1,y1]=pts[i+1],L=Math.hypot(x1-x0,y1-y0)||1,steps=Math.max(1,Math.ceil(L/4));
    for(let s=0;s<steps;s++){const a=s/steps,b=(s+1)/steps,ax=x0+(x1-x0)*a,ay=y0+(y1-y0)*a,bx=x0+(x1-x0)*b,by=y0+(y1-y0)*b,nx=-(y1-y0)/L*wd/2,ny=(x1-x0)/L*wd/2,o=v.length/3;
-    v.push(ax+nx-300,A.H(ax,ay)+.7,ay+ny-190,ax-nx-300,A.H(ax,ay)+.7,ay-ny-190,bx+nx-300,A.H(bx,by)+.7,by+ny-190,bx-nx-300,A.H(bx,by)+.7,by-ny-190);ix.push(o,o+2,o+1,o+1,o+2,o+3)}}
+    v.push(ax+nx-300,A.H(ax,ay)+.8,ay+ny-190,ax-nx-300,A.H(ax,ay)+.8,ay-ny-190,bx+nx-300,A.H(bx,by)+.8,by+ny-190,bx-nx-300,A.H(bx,by)+.8,by-ny-190);ix.push(o,o+2,o+1,o+1,o+2,o+3)}}
   if(v.length){const gm=new THREE.BufferGeometry();gm.setAttribute("position",new THREE.Float32BufferAttribute(v,3));gm.setIndex(ix);
-   const rm=new THREE.Mesh(gm,new THREE.MeshBasicMaterial({color:0xff3b2f,transparent:true,opacity:.75,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-8}));rm.renderOrder=3;A.scene.add(rm);parts.push(rm)}
-  truck=makeTruck();truck.scale.setScalar(Math.max(1,(9/F.k)/7));truck.visible=false;A.scene.add(truck);parts.push(truck)}
- F.truck={R,pts,cum,truck,parts,t0:F.t,dur:R.dur/60};log(F.id,null,"drone",`Өрт сөндірушілер шақырылды: ${R.name}, жолмен ${(R.dist/1000).toFixed(1)} км, ~${Math.max(1,Math.round(R.dur/60))} мин.`);truckPanel()}
-function truckTick(dt,ts){const F=FIRE,T=F&&F.truck;if(!T||!T.truck)return;const A=SC[F.id],u=Math.min(1,(F.t-T.t0)/Math.max(.5,T.dur)),tot=T.cum[T.cum.length-1],d=u*tot;
- let i=1;while(i<T.cum.length-1&&T.cum[i]<d)i++;const a=(d-T.cum[i-1])/((T.cum[i]-T.cum[i-1])||1),x=T.pts[i-1][0]+(T.pts[i][0]-T.pts[i-1][0])*a,y=T.pts[i-1][1]+(T.pts[i][1]-T.pts[i-1][1])*a;
- T.truck.visible=inScene(x,y);if(T.truck.visible){T.truck.position.set(x-300,A.H(x,y)+.1,y-190);T.truck.rotation.y=Math.atan2(T.pts[i][0]-T.pts[i-1][0],T.pts[i][1]-T.pts[i-1][1]);const b=Math.sin(ts*12)>0;T.truck.userData.lights[0].visible=b;T.truck.userData.lights[1].visible=!b}}
+   const rm=new THREE.Mesh(gm,new THREE.MeshBasicMaterial({color:0xff3b2f,transparent:true,opacity:.85,depthWrite:false,depthTest:false,side:THREE.DoubleSide}));rm.renderOrder=8;A.scene.add(rm);parts.push(rm)}
+  truck=makeTruck();truck.scale.setScalar(Math.max(1.6,(10/F.k)/7));truck.position.set(pts[0][0]-300,A.H(pts[0][0],pts[0][1]),pts[0][1]-190);A.scene.add(truck);parts.push(truck);
+  const el=document.createElement("span");el.className="plbl truck";el.textContent="🚒 "+R.name;document.getElementById("scLbl").appendChild(el);lbo={b:el,p:new THREE.Vector3(),lab:[0,-22],static:true};A.lb.push(lbo);
+  // камера көліктің артынан
+  G3.mode="truck";document.querySelectorAll(".vmodes button").forEach(b=>b.setAttribute("aria-pressed","false"));G3.ctl.goal={follow:true,target:truck.position.clone(),r:SMALL?200:160,ph:.95}}
+ // көлік жолда болғанда модель уақыты баяулайды: сапар ~12 секундқа созылады
+ const dur=R.dur/60;F.truck={R,pts,cum,truck,parts,lbo,t0:F.t,dur,prev:F.speed,done:false};F.speed=Math.max(.15,dur/12);F.play=true;
+ log(F.id,null,"drone",`Өрт сөндірушілер шақырылды: ${R.name}, жолмен ${(R.dist/1000).toFixed(1)} км, ~${Math.max(1,Math.round(dur))} мин.`);truckPanel();updateFirePanel()}
+function truckTick(dt,ts){const F=FIRE,T=F&&F.truck;if(!T)return;const A=SC[F.id],u=Math.min(1,(F.t-T.t0)/Math.max(.2,T.dur));
+ if(u>=1&&!T.done){T.done=true;F.speed=T.prev;log(F.id,null,"ok",`Өрт сөндірушілер жетті (${Math.round(T.t0+T.dur)}-мин).`);updateFirePanel();
+  if(T.truck&&G3.mode==="truck"){G3.mode="free";const fp=AREAS[F.id].points.find(q=>q.id===F.start);G3.ctl.goal={target:V(fp.x-300,A.H(fp.x,fp.y),fp.y-190),r:SMALL?300:230,ph:.75}}}
+ if(!T.truck)return;const tot=T.cum[T.cum.length-1],d=u*tot;let i=1;while(i<T.cum.length-1&&T.cum[i]<d)i++;
+ const a=(d-T.cum[i-1])/((T.cum[i]-T.cum[i-1])||1),x=T.pts[i-1][0]+(T.pts[i][0]-T.pts[i-1][0])*a,y=T.pts[i-1][1]+(T.pts[i][1]-T.pts[i-1][1])*a;
+ T.truck.position.set(x-300,A.H(x,y)+.1,y-190);const yaw=Math.atan2(T.pts[i][0]-T.pts[i-1][0],T.pts[i][1]-T.pts[i-1][1]);T.truck.rotation.y+=(((yaw-T.truck.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI)*Math.min(1,dt*8);
+ const b=Math.sin(ts*12)>0;T.truck.userData.lights[0].visible=b;T.truck.userData.lights[1].visible=!b;
+ if(T.lbo)T.lbo.p.copy(T.truck.position).add(V(0,6*T.truck.scale.x,0));
+ // көлік экранның төменгі жағында болуы үшін камера нысанасын алға ығыстырамыз (жоғарыда өрт панелі тұр)
+ if(G3.mode==="truck"&&G3.ctl.goal&&G3.ctl.goal.follow){const dx=-Math.sin(G3.ctl.th),dz=-Math.cos(G3.ctl.th);G3.ctl.goal.target.copy(T.truck.position).add(V(dx*G3.ctl.r*.28,0,dz*G3.ctl.r*.28))}
+ document.getElementById("fMiles").hidden=!T.done}
 function truckPanel(){const F=FIRE,el=document.getElementById("fTruck");if(!el)return;const R=F&&FIRE_ROUTES[F.id];el.hidden=!R;if(!R)return;const T=F.truck;
  if(!T){el.disabled=false;el.innerHTML=`🚒 Өрт сөндірушілерді шақыру <span>${R.name} · ${(R.dist/1000).toFixed(1)} км · ~${Math.max(1,Math.round(R.dur/60))} мин</span>`;return}
- el.disabled=true;const left=T.t0+T.dur-F.t;el.innerHTML=left>0?`🚒 Жолда: ~${Math.max(1,Math.ceil(left))} мин қалды <span>${T.truck&&T.truck.visible?"көлік картада көрінеді":"қаладан келе жатыр"}</span>`:`🚒 Өрт сөндірушілер жетті <span>${Math.round(T.t0)}-мин шақырылды, ${Math.round(T.t0+T.dur)}-мин жетті</span>`}
+ el.disabled=true;const left=T.t0+T.dur-F.t;el.innerHTML=left>0?`🚒 Жолда: ~${Math.max(1,Math.ceil(left))} мин қалды <span>${T.truck?"қызыл сызық — нақты маршрут, модель уақыты баяулатылды":"маршрут «Нақты карта» бөлімінде"}</span>`:`🚒 Өрт сөндірушілер жетті <span>${Math.round(T.t0)}-мин шақырылды, ${Math.round(T.t0+T.dur)}-мин жетті</span>`}
 
 /* ================= Тепловизор (дрон камерасы) ================= */
 let THR=null;
