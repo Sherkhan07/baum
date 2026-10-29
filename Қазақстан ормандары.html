@@ -188,12 +188,10 @@ footer{font-size:12px;color:var(--muted);padding:10px 0 30px}
 <main class="wrap">
 
 <section id="kzmap" class="grid">
-<div class="card"><h2>Қазақстан картасы</h2><p class="sub">Орман аумағын таңдаңыз. Картаны тінтуірмен немесе саусақпен бұруға болады. Шекара мен жер бедері жеңілдетілген, биіктік әдейі үлкейтілген.</p>
-<div class="v3 kzmap" id="kz" role="group" aria-label="Қазақстанның жер бедері бар 3D картасы: Баум тоғайы, Бурабай, Семей орманы, Іле Алатауы және Тараз кесенелері белгіленген"><div class="loading" id="kzLoad">3D карта жүктелуде…</div><div class="lbl" id="kzLbl"><svg id="kzLead"></svg></div><div class="vtools"><button id="kzReset" title="Бастапқы көрініс" aria-label="Бастапқы көрініс">⟲</button></div><div class="whint" id="kzHint">Масштабтау үшін Ctrl + дөңгелек</div></div>
+<div class="card"><h2>Қазақстан картасы</h2><div class="v3 kzmap" id="kz" role="group" aria-label="Қазақстанның жер бедері бар 3D картасы: Баум тоғайы, Бурабай, Семей орманы, Іле Алатауы және Тараз кесенелері белгіленген"><div class="loading" id="kzLoad">3D карта жүктелуде…</div><div class="lbl" id="kzLbl"><svg id="kzLead"></svg></div><div class="vtools"><button id="kzReset" title="Бастапқы көрініс" aria-label="Бастапқы көрініс">⟲</button></div><div class="whint" id="kzHint">Масштабтау үшін Ctrl + дөңгелек</div></div>
 <div class="maplegend"><span><i class="sw" style="background:var(--green)"></i>Орман аумағы</span><span><i class="sw" style="background:#ffb072;box-shadow:0 0 0 2px #c2570c"></i>Белсенді ескерту</span></div>
 </div>
-<div class="card"><h2>Аумақтар</h2><p class="sub">Аумақты таңдап, оның нақты 3D моделін және бақылау сценарийлерін қараңыз.</p>
-<div class="alist" id="alist"></div></div>
+<div class="card"><h2>Аумақтар</h2><div class="alist" id="alist"></div></div>
 </section>
 
 <section id="area">
@@ -201,7 +199,6 @@ footer{font-size:12px;color:var(--muted);padding:10px 0 30px}
 <div class="grid">
 <div>
 <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">3D бақылау моделі</h3><span class="chip sim">Симуляция</span></div>
-<p class="sub" style="margin-top:6px" id="schSub"></p>
 <div class="v3 scene" id="sc"><div class="loading" id="scLoad">3D көрініс құрылуда…</div><div class="lbl" id="scLbl"><svg id="scLead"></svg></div><div class="vnote" id="vNote">Шартты 3D модель · масштаб шартты · орнатылған құрылғы емес</div>
 <div class="vtools"><button id="zIn" aria-label="Жақындату" title="Жақындату">+</button><button id="zOut" aria-label="Алыстату" title="Алыстату">−</button><button id="vSun" aria-label="Күн жағдайын ауыстыру" title="Күн / кеш">☀</button><button id="vSat" aria-label="Жерге спутник суретін салу" title="Спутник суреті (интернет қажет)" aria-pressed="false">🛰</button><div class="wcomp" id="wComp" hidden title="Жел бағыты: көрсеткі жел соғатын жаққа қарайды, сан — км/сағ"><i>↑</i><span></span></div></div>
 <div class="vmodes" role="group" aria-label="Камера"><button data-m="all" aria-pressed="true">Жалпы</button><button data-m="pt" aria-pressed="false">Нүкте</button><button data-m="top" aria-pressed="false">Жоғарыдан</button><button data-m="drone" aria-pressed="false">Дронға еру</button></div>
@@ -214,7 +211,6 @@ footer{font-size:12px;color:var(--muted);padding:10px 0 30px}
 <div class="schlegend"><span><i class="sw" style="background:var(--green)"></i>Қалыпты</span><span><i class="sw" style="background:var(--orange)"></i>Тексеру қажет</span><span><i class="sw" style="background:#9aa5a0"></i>Байланыс жоқ</span><span><i class="sw" style="background:var(--drone)"></i>Виртуалды дрон</span><span id="schExtra"></span></div>
 </div>
 <div class="card" id="loc"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Нақты картада орналасқан жері</h3><span class="chip real">Нақты карта</span></div>
-<p class="sub" style="margin-top:6px">Аумақ қаланың қай жерінде орналасқанын көрсетеді. Оң жақ жоғарғы бұрыштан «Карта» немесе «Спутник» көрінісін таңдаңыз. Белгілер шамамен қойылған.</p>
 <div class="lmap" id="lmap" role="group" aria-label="Аумақтың нақты картадағы орны"></div>
 <p class="locnote" id="locNote"></p></div>
 <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Орман туралы</h3><span class="chip src">Дереккөз</span></div>
@@ -227,10 +223,8 @@ footer{font-size:12px;color:var(--muted);padding:10px 0 30px}
 </div>
 <div>
 <div class="card" id="wxCard"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Ауа райы және өрт қаупі</h3><span class="chip real">Нақты дерек</span></div>
-<p class="sub" style="margin-top:6px">Аумақтағы қазіргі ауа райы (Open-Meteo). Өрт қаупі — Нестеров индексі: соңғы жаңбырдан бері жиналған құрғақтық. Жел өрт моделінде қолданылады.</p>
 <div class="wxgrid" id="wxGrid"></div><div id="wxNest"></div></div>
 <div class="card" id="monitor"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Бақылау терезесі</h3><span class="chip sim">Симуляция</span></div>
-<p class="sub" style="margin-top:6px">Нүктені таңдап, сценарийді сынап көріңіз.</p>
 <div class="alert" id="mAlert" role="alert" hidden></div>
 <div class="pselect" id="pSel" aria-label="Бақылау нүктесі"></div>
 <div class="small" id="pPlace" style="margin-bottom:8px"></div>
@@ -1228,7 +1222,7 @@ function selectArea(id,scroll){
  document.getElementById("aFacts").innerHTML=a.facts.map((f,i)=>`<div class="fact${i==2?" future":""}"><h4>${f[0]}</h4><p>${f[1]}</p></div>`).join("");
  document.getElementById("aQuestion").textContent=a.question;
  document.getElementById("aResearch").innerHTML=a.research.map(r=>`<li>${r}</li>`).join("");
- document.getElementById("schSub").textContent=a.schSub;document.getElementById("schExtra").innerHTML=a.extra||"";
+ document.getElementById("schExtra").innerHTML=a.extra||"";
  buildPSel();renderMon();show3D(id);if(document.getElementById("sDemos"))demoButtons();try{showLoc(id)}catch(e){console.error(e)}
  if(history.replaceState)history.replaceState(null,"","#"+id);
  if(scroll)document.getElementById("area").scrollIntoView({behavior:"smooth"});
