@@ -840,6 +840,10 @@ function buildArea(id){
   grp.position.set(x-300,g,y-190);grp.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});scene.add(grp)});
  // кесенелер
  (sp.monuments||[]).forEach(m=>scene.add(buildMonument(m,H)));
+ // өрт сөндіру бөлімі (маршрут сахна ішінен басталса): ғимарат пен оның алдында тұрған көлік
+ {const FR=FIRE_ROUTES[id];if(sp.osm&&FR){const g0=areaXY(id,FR.geom[0][0],FR.geom[0][1]),g1=areaXY(id,FR.geom[Math.min(3,FR.geom.length-1)][0],FR.geom[Math.min(3,FR.geom.length-1)][1]);
+  if(inScene(g0[0],g0[1])){const ts=Math.max(1.6,(10/OSM_DATA[id].k)/7),yaw=Math.atan2(g1[0]-g0[0],g1[1]-g0[1]);sp._station=buildStation(scene,H,g0,yaw,ts);
+   const el=document.createElement("span");el.className="plbl truck";el.textContent="🚒 "+FR.name;xlb.push({b:el,p:V(sp._station.lx-300,H(sp._station.lx,sp._station.ly)+12*ts,sp._station.ly-190),lab:[0,0],static:true})}}}
  // дрон бекеті
  const bx=a.base.x,by=a.base.y,bg=H(bx,by),padTex=canvasTex(128,128,(x,w,h)=>{x.fillStyle="#d9d4c8";x.fillRect(0,0,w,h);x.strokeStyle="#fff";x.lineWidth=7;x.beginPath();x.arc(64,64,52,0,7);x.stroke();x.fillStyle="#fff";x.font="bold 64px system-ui,sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("H",64,68)});
  const pad=new THREE.Mesh(new THREE.CylinderGeometry(7,7.4,.8,32),[new THREE.MeshLambertMaterial({color:C(0x9a958a)}),new THREE.MeshLambertMaterial({map:padTex}),new THREE.MeshLambertMaterial({color:C(0x9a958a)})]);
@@ -1122,13 +1126,13 @@ function fireStart(){const id=cur,A=SC[id],sp=SPEC[id];if(!A||!sp._terr)return;f
  for(let i=0;i<90;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX(),color:i%3?0xff7a1a:0xffc23a,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));s.visible=false;A.scene.add(s);flames.push({s,n:-1,ph:Math.random()*6})}
  for(let i=0;i<36;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:SMOKE_TEX(),color:C(0x5f5c58),transparent:true,depthWrite:false,opacity:0}));s.visible=false;A.scene.add(s);smokes.push({s,age:9,max:1,v:V(0,0,0)})}
  const trees=(sp._trees||[]).map(o=>({m:o.m,cell:o.pts.map(([x,y])=>{const i=Math.floor((x+170)/4),j=Math.floor((y+150)/4);return i>=0&&j>=0&&i<W&&j<Hh?j*W+i:-1}),st:new Uint8Array(o.pts.length),orig:o.m.instanceColor.array.slice()}));
- FIRE={id,T,W,Hh,k,cv,ctx,img,tex,ov,flames,smokes,trees,fs,t:0,speed:1.5,play:true,house,ha,miles:[5,15,30,60].map(m=>[m,ha(m)]),w,start:p.id,last:-1,truck:null};
+ FIRE={id,T,W,Hh,k,cv,ctx,img,tex,ov,flames,smokes,trees,fs,t:0,speed:1.5,play:true,autoAt:2,house,ha,miles:[5,15,30,60].map(m=>[m,ha(m)]),w,start:p.id,last:-1,truck:null};
  log(id,p.id,"alert",`Өрттің таралу моделі іске қосылды: жел ${compass(w.wd)}, ${Math.round(ws)} км/сағ.`);
  document.getElementById("fPanel").hidden=false;document.getElementById("sHud").hidden=true;document.getElementById("bFire").textContent="✕ Өрт моделін тоқтату";
  const c=G3.ctl;G3.mode="free";document.querySelectorAll(".vmodes button").forEach(b=>b.setAttribute("aria-pressed","false"));c.goal={target:V(p.x-300,A.H(p.x,p.y),p.y-190),r:SMALL?380:300,ph:.62};
  updateFirePanel(true)}
 function fireStop(){if(!FIRE)return;const A=SC[FIRE.id];if(A){A.scene.remove(FIRE.ov);FIRE.flames.forEach(f=>A.scene.remove(f.s));FIRE.smokes.forEach(f=>A.scene.remove(f.s));
-  FIRE.trees.forEach(o=>{o.m.instanceColor.array.set(o.orig);o.m.instanceColor.needsUpdate=true});if(FIRE.truck){FIRE.truck.parts.forEach(o=>A.scene.remove(o));const lo=FIRE.truck.lbo;if(lo){lo.b.remove();const k=A.lb.indexOf(lo);if(k>=0)A.lb.splice(k,1)}}}
+  FIRE.trees.forEach(o=>{o.m.instanceColor.array.set(o.orig);o.m.instanceColor.needsUpdate=true});if(FIRE.truck){FIRE.truck.parts.forEach(o=>A.scene.remove(o));const st=SPEC[FIRE.id]._station;if(st&&FIRE.truck.truck===st.truck){A.scene.remove(st.truck);st.g.add(st.truck);st.truck.position.copy(st.home);st.truck.rotation.set(0,0,0);st.truck.userData.lights.forEach(l=>l.visible=false)}const lo=FIRE.truck.lbo;if(lo){lo.b.remove();const k=A.lb.indexOf(lo);if(k>=0)A.lb.splice(k,1)}}}
  FIRE.tex.dispose();FIRE=null;document.getElementById("fMiles").hidden=false;document.getElementById("fPanel").hidden=true;document.getElementById("sHud").hidden=false;document.getElementById("bFire").textContent="🔥 Өрттің таралуын көрсету (жел бойынша)"}
 const BURN=12;
 function fireTick(dt,ts){const F=FIRE;if(!F||F.id!==cur)return;const A=SC[F.id];if(F.play)F.t=Math.min(300,F.t+dt*F.speed);
@@ -1147,6 +1151,7 @@ function fireTick(dt,ts){const F=FIRE;if(!F||F.id!==cur)return;const A=SC[F.id];
  const wv=windXZ();F.smokes.forEach(s=>{s.age+=dt;if(s.age>=s.max){if(F.front&&F.front.length){const n=F.front[(Math.random()*F.front.length)|0],x=-170+(n%F.W+.5)*4,y=-150+(((n/F.W)|0)+.5)*4;
    s.age=0;s.max=5+Math.random()*4;s.s.visible=true;s.s.position.set(x-300,A.H(x,y)+F.fs,y-190);s.v.set(wv[0]*1.6+(Math.random()-.5),3+Math.random()*3,wv[1]*1.6+(Math.random()-.5))}else{s.s.visible=false;return}}
   const q=s.age/s.max;s.s.position.addScaledVector(s.v,dt);const sc=F.fs*(2+q*7);s.s.scale.set(sc,sc,1);s.s.material.opacity=Math.sin(Math.PI*q)*.55});
+ if(!F.truck&&F.t>=F.autoAt&&FIRE_ROUTES[F.id])callTruck(true);
  truckTick(dt,ts)}
 function updateFirePanel(full){const F=FIRE;if(!F)return;const t=F.t,w=F.w,c=NCL[w.cls??2];
  document.getElementById("fTime").innerHTML=`<b>${Math.floor(t)}</b> мин <span>· ${F.ha(t).toFixed(1)} га өртенді</span>`;
@@ -1166,29 +1171,75 @@ function makeTruck(){const g=new THREE.Group(),red=new THREE.MeshLambertMaterial
  for(const [x,z] of[[-1.2,2.4],[1.2,2.4],[-1.2,-2],[1.2,-2],[-1.2,-.4],[1.2,-.4]]){const wh=new THREE.Mesh(new THREE.CylinderGeometry(.55,.55,.4,12),dark);wh.rotation.z=Math.PI/2;wh.position.set(x,.55,z);g.add(wh)}
  const l1=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({color:0x2a6bff})),l2=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({color:0xff2a2a}));
  l1.position.set(-.6,2.85,2.7);l2.position.set(.6,2.85,2.7);g.add(l1,l2);g.userData.lights=[l1,l2];g.traverse(o=>{if(o.isMesh)o.castShadow=true});return g}
-function callTruck(){const F=FIRE;if(!F||F.truck)return;const R=FIRE_ROUTES[F.id];if(!R)return;const A=SC[F.id],O=OSM_DATA[F.id],parts=[];
+/* өрт сөндіру көлігіне арналған OSM көше желісі (граф) */
+const RSPD=[700,700,500,400,180,300]; // м/мин: даңғыл, көше, тұрғын көше, кіреберіс жол, жаяу жол/аллея, дала жолы
+function roadGraph(id){const sp=SPEC[id];if(sp._rg)return sp._rg;const O=osmDec(id),idx=new Map(),P=[],adj=[];
+ const node=(x,y)=>{const k=Math.round(x*10)+","+Math.round(y*10);let i=idx.get(k);if(i==null){i=P.length;idx.set(k,i);P.push([x,y]);adj.push([])}return i};
+ const seg=[],ends=[],edge=(a,b,c)=>{const L=Math.hypot(P[a][0]-P[b][0],P[a][1]-P[b][1]);adj[a].push([b,L,c]);adj[b].push([a,L,c])};
+ O.r.forEach(r=>{let first=-1,last=-1;for(let i=1;i<r.p.length;i++){const a=node(r.p[i-1][0],r.p[i-1][1]),b=node(r.p[i][0],r.p[i][1]);if(first<0)first=a;last=b;if(a===b)continue;edge(a,b,r.c);seg.push([a,b,r.c])}if(first>=0)ends.push(first,last)});
+ // деректер ықшамдалғанда кейбір қиылыс нүктелері жоғалады: көше ұштарын жақын көшеге қайта жалғаймыз
+ const cell=10,grid=new Map(),ck=(x,y)=>Math.floor(x/cell)+","+Math.floor(y/cell);
+ seg.forEach((s,i)=>{const [ax,ay]=P[s[0]],[bx,by]=P[s[1]];for(let gx=Math.floor(Math.min(ax,bx)/cell);gx<=Math.floor(Math.max(ax,bx)/cell);gx++)for(let gy=Math.floor(Math.min(ay,by)/cell);gy<=Math.floor(Math.max(ay,by)/cell);gy++){const k=gx+","+gy;(grid.get(k)||grid.set(k,[]).get(k)).push(i)}});
+ const tol=Math.max(1.2,6/OSM_DATA[id].k);
+ [...new Set(ends)].forEach(e=>{const [ex,ey]=P[e];let best=null,bd=tol;
+  for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)(grid.get((Math.floor(ex/cell)+dx)+","+(Math.floor(ey/cell)+dy))||[]).forEach(i=>{const [a,b,c]=seg[i];if(a===e||b===e)return;
+   const [ax,ay]=P[a],[bx,by]=P[b],vx=bx-ax,vy=by-ay,L2=vx*vx+vy*vy||1,t=Math.max(0,Math.min(1,((ex-ax)*vx+(ey-ay)*vy)/L2)),px=ax+vx*t,py=ay+vy*t,d=Math.hypot(ex-px,ey-py);
+   if(d<bd){bd=d;best=[a,b,c,px,py]}});
+  if(best){const [a,b,c,px,py]=best,q=node(px,py);if(q!==e){edge(q,a,c);edge(q,b,c);edge(e,q,c)}}});
+ return sp._rg={P,adj}}
+function nearestNode(g,x,y,maxC){let best=-1,bd=Infinity;g.P.forEach(([px,py],i)=>{if(!g.adj[i].some(e=>e[2]<=maxC))return;const d=(px-x)**2+(py-y)**2;if(d<bd){bd=d;best=i}});return best}
+function roadPath(g,s,fx,fy,k){const n=g.P.length,D=new Float64Array(n).fill(Infinity),prev=new Int32Array(n).fill(-1),h=new MinHeap();D[s]=0;h.push(0,s);
+ while(h.size){const [d,u]=h.pop();if(d>D[u])continue;for(const [m,L,c] of g.adj[u]){const nd=d+L*k/RSPD[c];if(nd<D[m]){D[m]=nd;prev[m]=u;h.push(nd,m)}}}
+ // жетуге болатын түйіндердің ішінен өртке ең жақыны (жаяу жүру айыппұлымен)
+ let best=-1,bc=Infinity;for(let i=0;i<n;i++){if(!isFinite(D[i]))continue;const c=Math.hypot(g.P[i][0]-fx,g.P[i][1]-fy)*k/120+D[i];if(c<bc){bc=c;best=i}}
+ if(best<0)return null;const pts=[];for(let i=best;i>=0;i=prev[i])pts.push(g.P[i]);return{pts:pts.reverse(),min:D[best]}}
+function buildStation(scene,H,[x,y],yaw,ts){const g=new THREE.Group(),wall=new THREE.MeshLambertMaterial({color:C(0xe9e2d6)}),red=new THREE.MeshLambertMaterial({color:C(0xc8261c)}),roof=new THREE.MeshLambertMaterial({color:C(0x5b5f63)});
+ // гараж: үш қақпа, мұнара, шатыр; көше жаққа қарайды
+ const bx=new THREE.Mesh(new THREE.BoxGeometry(11*ts,4.2*ts,7*ts),wall);bx.position.set(0,2.1*ts,-4.2*ts);g.add(bx);
+ const rf=new THREE.Mesh(new THREE.BoxGeometry(11.6*ts,.5*ts,7.6*ts),roof);rf.position.set(0,4.45*ts,-4.2*ts);g.add(rf);
+ for(const dx of[-3.4,0,3.4]){const d=new THREE.Mesh(new THREE.BoxGeometry(2.8*ts,3.2*ts,.2*ts),red);d.position.set(dx*ts,1.6*ts,-.65*ts);g.add(d)}
+ const tw=new THREE.Mesh(new THREE.BoxGeometry(2.4*ts,8*ts,2.4*ts),wall);tw.position.set(6.6*ts,4*ts,-5.5*ts);g.add(tw);const tr=new THREE.Mesh(new THREE.ConeGeometry(2*ts,1.6*ts,4),red);tr.rotation.y=Math.PI/4;tr.position.set(6.6*ts,8.8*ts,-5.5*ts);g.add(tr);
+ const sg=new THREE.Mesh(new THREE.BoxGeometry(4*ts,.9*ts,.15*ts),red);sg.position.set(0,3.75*ts,-.62*ts);g.add(sg);
+ const truck=makeTruck();truck.scale.setScalar(ts);truck.position.set(0,0,2.6*ts);g.add(truck);truck.userData.lights.forEach(l=>l.visible=false);
+ g.position.set(x-300,H(x,y),y-190);g.rotation.y=yaw;g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});scene.add(g);
+ return{g,truck,home:truck.position.clone(),lx:x,ly:y}}
+function callTruck(auto){const F=FIRE;if(!F||F.truck)return;const R=FIRE_ROUTES[F.id];if(!R)return;const A=SC[F.id],O=OSM_DATA[F.id],parts=[];
  let pts=null,cum=[0],truck=null,lbo=null;
- if(O){const all=R.geom.map(([la,lo])=>areaXY(F.id,la,lo)),i0=Math.max(0,all.findIndex(([x,y])=>inScene(x,y)));pts=all.slice(i0);
-  // бекеттен соң өрт орнына дейін (шеттен 8 бірлік қалдырып)
-  const fp=AREAS[F.id].points.find(q=>q.id===F.start),e=pts[pts.length-1],dd=Math.hypot(fp.x-e[0],fp.y-e[1]);if(dd>10)pts.push([fp.x-(fp.x-e[0])/dd*8,fp.y-(fp.y-e[1])/dd*8]);
-  for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+ let outerMin=R.dur/60,innerMin=0,kmTot=R.dist/1000,walkM=0;
+ if(O){const all=R.geom.map(([la,lo])=>areaXY(F.id,la,lo)),i0=Math.max(0,all.findIndex(([x,y])=>inScene(x,y))),fp=AREAS[F.id].points.find(q=>q.id===F.start);
+  // сахнаға кіргенге дейінгі бөлік: OSRM уақыты (қашықтыққа пропорционал)
+  let outM=0;for(let i=1;i<=i0;i++)outM+=Math.hypot(all[i][0]-all[i-1][0],all[i][1]-all[i-1][1])*F.k;outerMin=R.dist?R.dur/60*Math.min(1,outM/R.dist):0;
+  // сахна ішінде: OSM көше желісі бойынша ең жылдам жол өрт нүктесіне ең жақын жолға дейін
+  const g=roadGraph(F.id),s0=nearestNode(g,all[i0][0],all[i0][1],2),path=s0>=0?roadPath(g,s0,fp.x,fp.y,F.k):null;
+  if(path&&path.pts.length>1){pts=[all[i0]].concat(path.pts);innerMin=path.min}else{pts=all.slice(i0);innerMin=Math.max(.5,R.dur/60-outerMin)}
+  // жолдан өрт орнына дейін соңғы бөлік (өрттен 8 бірлік қалдырып)
+  const e=pts[pts.length-1],dd=Math.hypot(fp.x-e[0],fp.y-e[1]);
+  if(dd>10&&(dd-8)*F.k<=150){pts.push([fp.x-(fp.x-e[0])/dd*8,fp.y-(fp.y-e[1])/dd*8]);innerMin+=(dd-8)*F.k/120}
+  else if(dd>10){walkM=(dd-8)*F.k;innerMin+=walkM/60;  // жол біткен соң өрт сөндірушілер жаяу барады (~3,6 км/сағ)
+   const wp=[];for(let i=0;i<=40;i++){const a=i/40,x=e[0]+(fp.x-e[0])*a,y=e[1]+(fp.y-e[1])*a;wp.push(V(x-300,A.H(x,y)+1.2,y-190))}
+   const wl=new THREE.Line(new THREE.BufferGeometry().setFromPoints(wp),new THREE.LineDashedMaterial({color:0xffb020,dashSize:2.5,gapSize:2,depthTest:false,transparent:true}));wl.computeLineDistances();wl.renderOrder=9;A.scene.add(wl);parts.push(wl)}
+  for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));kmTot=(outM+cum[cum.length-1]*F.k)/1000;
   const wd=Math.max(2.5,7/F.k),v=[],ix=[];
   for(let i=0;i<pts.length-1;i++){const [x0,y0]=pts[i],[x1,y1]=pts[i+1],L=Math.hypot(x1-x0,y1-y0)||1,steps=Math.max(1,Math.ceil(L/4));
    for(let s=0;s<steps;s++){const a=s/steps,b=(s+1)/steps,ax=x0+(x1-x0)*a,ay=y0+(y1-y0)*a,bx=x0+(x1-x0)*b,by=y0+(y1-y0)*b,nx=-(y1-y0)/L*wd/2,ny=(x1-x0)/L*wd/2,o=v.length/3;
     v.push(ax+nx-300,A.H(ax,ay)+.8,ay+ny-190,ax-nx-300,A.H(ax,ay)+.8,ay-ny-190,bx+nx-300,A.H(bx,by)+.8,by+ny-190,bx-nx-300,A.H(bx,by)+.8,by-ny-190);ix.push(o,o+2,o+1,o+1,o+2,o+3)}}
   if(v.length){const gm=new THREE.BufferGeometry();gm.setAttribute("position",new THREE.Float32BufferAttribute(v,3));gm.setIndex(ix);
    const rm=new THREE.Mesh(gm,new THREE.MeshBasicMaterial({color:0xff3b2f,transparent:true,opacity:.85,depthWrite:false,depthTest:false,side:THREE.DoubleSide}));rm.renderOrder=8;A.scene.add(rm);parts.push(rm)}
-  truck=makeTruck();truck.scale.setScalar(Math.max(1.6,(10/F.k)/7));truck.position.set(pts[0][0]-300,A.H(pts[0][0],pts[0][1]),pts[0][1]-190);A.scene.add(truck);parts.push(truck);
+  const st=SPEC[F.id]._station;if(st){truck=st.truck;st.g.remove(truck);A.scene.add(truck)}
+  else{truck=makeTruck();truck.scale.setScalar(Math.max(1.6,(10/F.k)/7));A.scene.add(truck);parts.push(truck)}
+  truck.position.set(pts[0][0]-300,A.H(pts[0][0],pts[0][1]),pts[0][1]-190);
   const el=document.createElement("span");el.className="plbl truck";el.textContent="🚒 "+R.name;document.getElementById("scLbl").appendChild(el);lbo={b:el,p:new THREE.Vector3(),lab:[0,-22],static:true};A.lb.push(lbo);
   // камера көліктің артынан
   G3.mode="truck";document.querySelectorAll(".vmodes button").forEach(b=>b.setAttribute("aria-pressed","false"));G3.ctl.goal={follow:true,target:truck.position.clone(),r:SMALL?200:160,ph:.95}}
  // көлік жолда болғанда модель уақыты баяулайды: сапар ~12 секундқа созылады
- const dur=R.dur/60;F.truck={R,pts,cum,truck,parts,lbo,t0:F.t,dur,prev:F.speed,done:false};F.speed=Math.max(.15,dur/12);F.play=true;
- log(F.id,null,"drone",`Өрт сөндірушілер шақырылды: ${R.name}, жолмен ${(R.dist/1000).toFixed(1)} км, ~${Math.max(1,Math.round(dur))} мин.`);truckPanel();updateFirePanel()}
-function truckTick(dt,ts){const F=FIRE,T=F&&F.truck;if(!T)return;const A=SC[F.id],u=Math.min(1,(F.t-T.t0)/Math.max(.2,T.dur));
+ const outer=O?outerMin:R.dur/60,inner=O?innerMin:0,dur=outer+inner;F.truck={R,pts,cum,truck,parts,lbo,t0:F.t,dur,outer,inner,km:kmTot,walk:walkM,prev:F.speed,done:false};F.play=true;
+ log(F.id,null,"drone",`${auto?"Датчик ескертуі бойынша өрт сөндіру бөліміне автоматты хабар жіберілді. ":""}Өрт сөндірушілер шақырылды: ${R.name}, өрт орнына дейін жолмен ${kmTot.toFixed(1)} км${walkM?`, соңғы ${Math.round(walkM)} м жаяу`:""}, ~${Math.max(1,Math.round(dur))} мин.`);truckPanel();updateFirePanel()}
+function truckTick(dt,ts){const F=FIRE,T=F&&F.truck;if(!T)return;const A=SC[F.id],el=F.t-T.t0,u=Math.min(1,el/Math.max(.2,T.dur)),ui=T.inner>0?Math.max(0,Math.min(1,(el-T.outer)/T.inner)):u;
+ // қала ішіндегі бөлік ~3 с, сахнадағы көшелер ~10 с көрсетіледі
+ if(!T.done)F.speed=el<T.outer?Math.max(.15,T.outer/3):Math.max(.15,T.inner/10);
  if(u>=1&&!T.done){T.done=true;F.speed=T.prev;log(F.id,null,"ok",`Өрт сөндірушілер жетті (${Math.round(T.t0+T.dur)}-мин).`);updateFirePanel();
   if(T.truck&&G3.mode==="truck"){G3.mode="free";const fp=AREAS[F.id].points.find(q=>q.id===F.start);G3.ctl.goal={target:V(fp.x-300,A.H(fp.x,fp.y),fp.y-190),r:SMALL?300:230,ph:.75}}}
- if(!T.truck)return;const tot=T.cum[T.cum.length-1],d=u*tot;let i=1;while(i<T.cum.length-1&&T.cum[i]<d)i++;
+ if(!T.truck)return;const tot=T.cum[T.cum.length-1],d=ui*tot;let i=1;while(i<T.cum.length-1&&T.cum[i]<d)i++;
  const a=(d-T.cum[i-1])/((T.cum[i]-T.cum[i-1])||1),x=T.pts[i-1][0]+(T.pts[i][0]-T.pts[i-1][0])*a,y=T.pts[i-1][1]+(T.pts[i][1]-T.pts[i-1][1])*a;
  T.truck.position.set(x-300,A.H(x,y)+.1,y-190);const yaw=Math.atan2(T.pts[i][0]-T.pts[i-1][0],T.pts[i][1]-T.pts[i-1][1]);T.truck.rotation.y+=(((yaw-T.truck.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI)*Math.min(1,dt*8);
  const b=Math.sin(ts*12)>0;T.truck.userData.lights[0].visible=b;T.truck.userData.lights[1].visible=!b;
@@ -1197,8 +1248,8 @@ function truckTick(dt,ts){const F=FIRE,T=F&&F.truck;if(!T)return;const A=SC[F.id
  if(G3.mode==="truck"&&G3.ctl.goal&&G3.ctl.goal.follow){const dx=-Math.sin(G3.ctl.th),dz=-Math.cos(G3.ctl.th);G3.ctl.goal.target.copy(T.truck.position).add(V(dx*G3.ctl.r*.28,0,dz*G3.ctl.r*.28))}
  document.getElementById("fMiles").hidden=!T.done}
 function truckPanel(){const F=FIRE,el=document.getElementById("fTruck");if(!el)return;const R=F&&FIRE_ROUTES[F.id];el.hidden=!R;if(!R)return;const T=F.truck;
- if(!T){el.disabled=false;el.innerHTML=`🚒 Өрт сөндірушілерді шақыру <span>${R.name} · ${(R.dist/1000).toFixed(1)} км · ~${Math.max(1,Math.round(R.dur/60))} мин</span>`;return}
- el.disabled=true;const left=T.t0+T.dur-F.t;el.innerHTML=left>0?`🚒 Жолда: ~${Math.max(1,Math.ceil(left))} мин қалды <span>${T.truck?"қызыл сызық — нақты маршрут, модель уақыты баяулатылды":"маршрут «Нақты карта» бөлімінде"}</span>`:`🚒 Өрт сөндірушілер жетті <span>${Math.round(T.t0)}-мин шақырылды, ${Math.round(T.t0+T.dur)}-мин жетті</span>`}
+ if(!T){el.disabled=false;el.innerHTML=`🚒 ${F.t<F.autoAt?`Датчик ескертуі: ${Math.max(0,F.autoAt-F.t).toFixed(1)} мин`:"Шақыру"} <span>${R.name} автоматты шақырылады · ${(R.dist/1000).toFixed(1)} км · ~${Math.max(1,Math.round(R.dur/60))} мин</span>`;return}
+ el.disabled=true;const left=T.t0+T.dur-F.t;el.innerHTML=left>0?`🚒 Жолда: ~${Math.max(1,Math.ceil(left))} мин қалды <span>${T.truck?(F.t-T.t0<T.outer?"қаладан сахнаға келе жатыр":`қызыл сызық — көшелер бойынша ${T.km.toFixed(1)} км${T.walk?`, сары — жаяу ${Math.round(T.walk)} м`:""}`):"маршрут «Нақты карта» бөлімінде"}</span>`:`🚒 Өрт сөндірушілер жетті <span>${Math.round(T.t0)}-мин шақырылды, ${Math.round(T.t0+T.dur)}-мин жетті</span>`}
 
 /* ================= Тепловизор (дрон камерасы) ================= */
 let THR=null;
@@ -1300,7 +1351,7 @@ document.getElementById("bFire").onclick=()=>FIRE?fireStop():fireStart();
 document.getElementById("fClose").onclick=fireStop;
 document.getElementById("fPlay").onclick=()=>{if(FIRE){FIRE.play=!FIRE.play;updateFirePanel()}};
 document.getElementById("fSpd").onclick=()=>{if(FIRE){FIRE.speed=FIRE.speed>2?1.5:4.5;updateFirePanel()}};
-document.getElementById("fTruck").onclick=callTruck;
+document.getElementById("fTruck").onclick=()=>callTruck(false);
 document.getElementById("vThermal").onclick=toggleThermal;
 document.querySelectorAll("#vBtns button").forEach(b=>b.onclick=()=>{log(drone.area,drone.pid,b.dataset.r==="confirm"?"alert":"ok",RES[b.dataset.r]);document.querySelectorAll("#vBtns button").forEach(x=>x.disabled=true);setTimeout(returnDrone,700)});
 
